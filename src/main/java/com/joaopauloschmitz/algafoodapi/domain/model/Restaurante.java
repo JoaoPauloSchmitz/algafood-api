@@ -1,7 +1,7 @@
 package com.joaopauloschmitz.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.joaopauloschmitz.algafoodapi.Groups;
+import com.joaopauloschmitz.algafoodapi.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
@@ -31,6 +31,7 @@ public class Restaurante {
     @Column(nullable = false)
     private String nome;
 
+    @NotNull
     @PositiveOrZero
     @Column(name = "taxa_frete", nullable = false)
     private BigDecimal taxaFrete;
@@ -38,8 +39,8 @@ public class Restaurante {
     @Valid
     @ConvertGroup(from = Default.class, to = Groups.CozinhaId.class)
     @NotNull
-    @JoinColumn(nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cozinha_id", nullable = false)
+    @ManyToOne
     private Cozinha cozinha;
 
     @JsonIgnore

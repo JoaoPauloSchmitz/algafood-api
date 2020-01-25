@@ -2,11 +2,9 @@ package com.joaopauloschmitz.algafoodapi.domain.service;
 
 import com.joaopauloschmitz.algafoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.EntidadeEmUsoException;
-import com.joaopauloschmitz.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.model.Cidade;
 import com.joaopauloschmitz.algafoodapi.domain.model.Estado;
 import com.joaopauloschmitz.algafoodapi.domain.repository.CidadeRepository;
-import com.joaopauloschmitz.algafoodapi.domain.repository.EstadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
