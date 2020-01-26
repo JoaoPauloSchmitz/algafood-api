@@ -1,5 +1,9 @@
 package com.joaopauloschmitz.algafoodapi.api.controller;
 
+import com.joaopauloschmitz.algafoodapi.api.assembler.EstadoInputDiassembler;
+import com.joaopauloschmitz.algafoodapi.api.assembler.EstadoModelAssembler;
+import com.joaopauloschmitz.algafoodapi.api.model.EstadoModel;
+import com.joaopauloschmitz.algafoodapi.api.model.input.EstadoInput;
 import com.joaopauloschmitz.algafoodapi.domain.model.Estado;
 import com.joaopauloschmitz.algafoodapi.domain.repository.EstadoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroEstadoService;
@@ -21,30 +25,38 @@ public class EstadoController {
     @Autowired
     private CadastroEstadoService cadastroEstadoService;
 
+    @Autowired
+    private EstadoModelAssembler estadoModelAssembler;
+
+    @Autowired
+    private EstadoInputDiassembler estadoInputDiassembler;
+
     @GetMapping
-    public List<Estado> listar() {
-        return estadoRepository.findAll();
+    public List<EstadoModel> listar() {
+        return this.estadoModelAssembler.toCollectionModel(this.estadoRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Estado buscar(@PathVariable Long id) {
-        return this.cadastroEstadoService.buscarOuFalhar(id);
+    public EstadoModel buscar(@PathVariable Long id) {
+        Estado estado = this.cadastroEstadoService.buscarOuFalhar(id);
+        return this.estadoModelAssembler.toModel(estado);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Estado adicionar(@RequestBody @Valid Estado estado) {
-        return cadastroEstadoService.salvar(estado);
+    public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
+        Estado estado = this.estadoInputDiassembler.toDomainObject(estadoInput);
+        return this.estadoModelAssembler.toModel(this.cadastroEstadoService.salvar(estado));
     }
 
     @PutMapping("/{id}")
-    public Estado atualizar(@PathVariable Long id,
-                                            @RequestBody @Valid Estado estado) {
+    public EstadoModel atualizar(@PathVariable Long id,
+                                            @RequestBody @Valid EstadoInput estadoInput) {
 
-        Estado estadoAtual = cadastroEstadoService.buscarOuFalhar(id);
-        BeanUtils.copyProperties(estado, estadoAtual, "id");
+        Estado estadoAtual = this.cadastroEstadoService.buscarOuFalhar(id);
+        this.estadoInputDiassembler.copyToDomainObject(estadoInput, estadoAtual);
 
-        return cadastroEstadoService.salvar(estadoAtual);
+        return this.estadoModelAssembler.toModel(cadastroEstadoService.salvar(estadoAtual));
     }
 
     @DeleteMapping("/{id}")

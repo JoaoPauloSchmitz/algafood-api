@@ -1,6 +1,5 @@
 package com.joaopauloschmitz.algafoodapi.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonRootName;
 import com.joaopauloschmitz.algafoodapi.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
-@JsonRootName("cozinha")
 @Data
 @EqualsAndHashCode(of = "id")
 @Entity
