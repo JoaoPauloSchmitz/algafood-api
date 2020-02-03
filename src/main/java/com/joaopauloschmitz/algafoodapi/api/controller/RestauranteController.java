@@ -4,8 +4,10 @@ import com.joaopauloschmitz.algafoodapi.api.assembler.RestauranteInputDiassemble
 import com.joaopauloschmitz.algafoodapi.api.assembler.RestauranteModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.model.RestauranteModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.RestauranteInput;
+import com.joaopauloschmitz.algafoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
+import com.joaopauloschmitz.algafoodapi.domain.exception.RestauranteNaoEncontradoException;
 import com.joaopauloschmitz.algafoodapi.domain.model.Restaurante;
 import com.joaopauloschmitz.algafoodapi.domain.repository.RestauranteRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroRestauranteService;
@@ -49,7 +51,7 @@ public class RestauranteController {
         try {
             Restaurante restaurante = this.restauranteInputDiassembler.toDomainObject(restauranteInput);
             return this.restauranteModelAssembler.toModel(this.cadastroRestauranteService.salvar(restaurante));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
     }
@@ -61,8 +63,54 @@ public class RestauranteController {
             this.restauranteInputDiassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 
             return this.restauranteModelAssembler.toModel(this.cadastroRestauranteService.salvar(restauranteAtual));
-        } catch (CozinhaNaoEncontradaException e) {
+        } catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException e) {
             throw new NegocioException(e.getMessage(), e);
         }
+    }
+
+    @PutMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativar(@PathVariable Long id) {
+        try {
+            this.cadastroRestauranteService.ativar(id);
+
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @DeleteMapping("/{id}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativar(@PathVariable Long id) {
+        try {
+            this.cadastroRestauranteService.inativar(id);
+
+        } catch (RestauranteNaoEncontradoException e) {
+            throw new NegocioException(e.getMessage(), e);
+        }
+    }
+
+    @PutMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void ativarMultiplos(@RequestBody List<Long> restautantesId) {
+        this.cadastroRestauranteService.ativar(restautantesId);
+    }
+
+    @DeleteMapping("/ativacoes")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void inativarMultiplos(@RequestBody List<Long> restautantesId) {
+        this.cadastroRestauranteService.inativar(restautantesId);
+    }
+
+    @PutMapping("/{id}/abertura")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void abrir(@PathVariable Long id) {
+        this.cadastroRestauranteService.abrir(id);
+    }
+
+    @PutMapping("/{id}/fechamento")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void fechar(@PathVariable Long id) {
+        this.cadastroRestauranteService.fechar(id);
     }
 }

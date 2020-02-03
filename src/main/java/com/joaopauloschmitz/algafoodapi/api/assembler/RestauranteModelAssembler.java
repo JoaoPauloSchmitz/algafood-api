@@ -1,6 +1,5 @@
 package com.joaopauloschmitz.algafoodapi.api.assembler;
 
-import com.joaopauloschmitz.algafoodapi.api.model.CozinhaModel;
 import com.joaopauloschmitz.algafoodapi.api.model.RestauranteModel;
 import com.joaopauloschmitz.algafoodapi.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
