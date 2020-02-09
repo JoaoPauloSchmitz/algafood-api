@@ -1,6 +1,5 @@
 package com.joaopauloschmitz.algafoodapi.api.assembler;
 
-import com.joaopauloschmitz.algafoodapi.api.model.PedidoModel;
 import com.joaopauloschmitz.algafoodapi.api.model.PedidoResumoModel;
 import com.joaopauloschmitz.algafoodapi.domain.model.Pedido;
 import org.modelmapper.ModelMapper;

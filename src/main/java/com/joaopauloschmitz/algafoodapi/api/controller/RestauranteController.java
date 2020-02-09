@@ -1,9 +1,11 @@
 package com.joaopauloschmitz.algafoodapi.api.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.joaopauloschmitz.algafoodapi.api.assembler.RestauranteInputDiassembler;
 import com.joaopauloschmitz.algafoodapi.api.assembler.RestauranteModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.model.RestauranteModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.RestauranteInput;
+import com.joaopauloschmitz.algafoodapi.api.model.view.RestauranteView;
 import com.joaopauloschmitz.algafoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
@@ -34,9 +36,16 @@ public class RestauranteController {
     @Autowired
     private RestauranteInputDiassembler restauranteInputDiassembler;
 
+    @JsonView(RestauranteView.Resumo.class)
     @GetMapping
     public List<RestauranteModel> listar() {
         return this.restauranteModelAssembler.toCollectionModel(this.restauranteRepository.findAll());
+    }
+
+    @JsonView(RestauranteView.ApenasNome.class)
+    @GetMapping(params = "projecao=apenas-nome")
+    public List<RestauranteModel> listarApenasNomes() {
+        return listar();
     }
 
     @GetMapping("/{id}")
@@ -44,6 +53,24 @@ public class RestauranteController {
         Restaurante restaurante = this.cadastroRestauranteService.buscarOuFalhar(id);
         return this.restauranteModelAssembler.toModel(restaurante);
     }
+
+//	@GetMapping
+//	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
+//		List<Restaurante> restaurantes = this.cadastroRestauranteService.findAll();
+//		List<RestauranteModel> restaurantesModel = this.restauranteModelAssembler.toCollectionModel(restaurantes);
+//
+//		MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restaurantesModel);
+//
+//		restaurantesWrapper.setSerializationView(RestauranteView.Resumo.class);
+//
+//		if ("apenas-nome".equals(projecao)) {
+//			restaurantesWrapper.setSerializationView(RestauranteView.ApenasNome.class);
+//		} else if ("completo".equals(projecao)) {
+//			restaurantesWrapper.setSerializationView(null);
+//		}
+//
+//		return restaurantesWrapper;
+//	}
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -5,24 +5,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/pedidos/{id}")
+@RequestMapping("/pedidos/{codigoPedido}")
 public class FluxoPedidoController {
 
     @Autowired
     private FluxoPedidoService fluxoPedidoService;
 
     @PutMapping("/confirmacao")
-    public void confirmar(@PathVariable Long id) {
-        this.fluxoPedidoService.confirmar(id);
+    public void confirmar(@PathVariable String codigoPedido) {
+        this.fluxoPedidoService.confirmar(codigoPedido);
     }
 
     @PutMapping("/entrega")
-    public void entregar(@PathVariable Long id) {
-        this.fluxoPedidoService.entregar(id);
+    public void entregar(@PathVariable String codigoPedido) {
+        this.fluxoPedidoService.entregar(codigoPedido);
     }
 
     @PutMapping("/cancelamento")
-    public void cancelar(@PathVariable Long id) {
-        this.fluxoPedidoService.cancelar(id);
+    public void cancelar(@PathVariable String codigoPedido) {
+        this.fluxoPedidoService.cancelar(codigoPedido);
     }
 }
