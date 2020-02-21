@@ -1,10 +1,13 @@
 package com.joaopauloschmitz.algafoodapi.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.joaopauloschmitz.algafoodapi.domain.event.PedidoCanceladoEvent;
+import com.joaopauloschmitz.algafoodapi.domain.event.PedidoConfirmadoEvent;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -15,7 +18,7 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 @Data
 @Entity
-public class Pedido {
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -69,6 +72,8 @@ public class Pedido {
     public void confirmar() {
         this.setStatus(StatusPedido.CONFIRMADO);
         this.setDataConfirmacao(OffsetDateTime.now());
+
+        registerEvent(new PedidoConfirmadoEvent(this));
     }
 
     public void entregar() {
@@ -79,6 +84,8 @@ public class Pedido {
     public void cancelar() {
         this.setStatus(StatusPedido.CANCELADO);
         this.setDataCancelamento(OffsetDateTime.now());
+
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     private void setStatus(StatusPedido novoStatus) {

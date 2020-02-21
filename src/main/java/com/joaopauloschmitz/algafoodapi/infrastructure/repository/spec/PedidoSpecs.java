@@ -1,7 +1,7 @@
 package com.joaopauloschmitz.algafoodapi.infrastructure.repository.spec;
 
-import com.joaopauloschmitz.algafoodapi.domain.model.Pedido;
 import com.joaopauloschmitz.algafoodapi.domain.filter.PedidoFilter;
+import com.joaopauloschmitz.algafoodapi.domain.model.Pedido;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;

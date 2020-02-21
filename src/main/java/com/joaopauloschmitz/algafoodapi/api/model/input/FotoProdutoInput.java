@@ -1,15 +1,14 @@
 package com.joaopauloschmitz.algafoodapi.api.model.input;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import com.joaopauloschmitz.algafoodapi.core.validation.FileContentType;
 import com.joaopauloschmitz.algafoodapi.core.validation.FileSize;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Getter;
-import lombok.Setter;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
