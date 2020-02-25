@@ -6,19 +6,21 @@ import com.joaopauloschmitz.algafoodapi.api.model.UsuarioModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.SenhaInput;
 import com.joaopauloschmitz.algafoodapi.api.model.input.UsuarioComSenhaInput;
 import com.joaopauloschmitz.algafoodapi.api.model.input.UsuarioInput;
+import com.joaopauloschmitz.algafoodapi.api.openapi.controller.UsuarioControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.domain.model.Usuario;
 import com.joaopauloschmitz.algafoodapi.domain.repository.UsuarioRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/usuarios")
-public class UsuarioController {
+@RequestMapping(value = "/usuarios", produces = MediaType.APPLICATION_JSON_VALUE)
+public class UsuarioController implements UsuarioControllerOpenApi {
 
     @Autowired
     private UsuarioRepository usuarioRepository;

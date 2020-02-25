@@ -1,5 +1,6 @@
 package com.joaopauloschmitz.algafoodapi.api.controller;
 
+import com.joaopauloschmitz.algafoodapi.api.openapi.controller.EstatisticasControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.domain.filter.VendaDiariaFilter;
 import com.joaopauloschmitz.algafoodapi.domain.model.dto.VendaDiaria;
 import com.joaopauloschmitz.algafoodapi.domain.service.VendaQueryService;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/estatisticas")
-public class EstatisticasController {
+@RequestMapping(value = "/estatisticas")
+public class EstatisticasController implements EstatisticasControllerOpenApi {
 
     @Autowired
     private VendaQueryService vendaQueryService;

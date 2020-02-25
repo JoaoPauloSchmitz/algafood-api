@@ -6,6 +6,7 @@ import com.joaopauloschmitz.algafoodapi.api.assembler.RestauranteModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.model.RestauranteModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.RestauranteInput;
 import com.joaopauloschmitz.algafoodapi.api.model.view.RestauranteView;
+import com.joaopauloschmitz.algafoodapi.api.openapi.controller.RestauranteControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.domain.exception.CidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.CozinhaNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
@@ -15,14 +16,15 @@ import com.joaopauloschmitz.algafoodapi.domain.repository.RestauranteRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/restaurantes")
-public class RestauranteController {
+@RequestMapping(value = "/restaurantes", produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestauranteController implements RestauranteControllerOpenApi {
 
     @Autowired
     private RestauranteRepository restauranteRepository;

@@ -6,6 +6,7 @@ import com.joaopauloschmitz.algafoodapi.api.assembler.PedidoResumoModelAssembler
 import com.joaopauloschmitz.algafoodapi.api.model.PedidoModel;
 import com.joaopauloschmitz.algafoodapi.api.model.PedidoResumoModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.PedidoInput;
+import com.joaopauloschmitz.algafoodapi.api.openapi.controller.PedidoControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.core.data.PageableTranslator;
 import com.joaopauloschmitz.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
@@ -15,12 +16,15 @@ import com.joaopauloschmitz.algafoodapi.domain.model.Usuario;
 import com.joaopauloschmitz.algafoodapi.domain.repository.PedidoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.EmissaoPedidoService;
 import com.joaopauloschmitz.algafoodapi.infrastructure.repository.spec.PedidoSpecs;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,8 +32,8 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/pedidos")
-public class PedidoController {
+@RequestMapping(value = "/pedidos", produces = MediaType.APPLICATION_JSON_VALUE)
+public class PedidoController implements PedidoControllerOpenApi {
 
     @Autowired
     private EmissaoPedidoService emissaoPedidoService;
