@@ -9,6 +9,7 @@ import com.joaopauloschmitz.algafoodapi.domain.model.FormaPagamento;
 import com.joaopauloschmitz.algafoodapi.domain.repository.FormaPagamentoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroFormaPagamentoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,8 +39,9 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
     @Autowired
     private FormaPagamentoInputDiassembler formaPagamentoInputDiassembler;
 
+    @Override
     @GetMapping
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request) {
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
 
         String eTag = "0";
@@ -54,8 +56,10 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
             return null;
         }
 
-        List<FormaPagamentoModel> formaPagamentoModels = this.formaPagamentoModelAssembler
-                .toCollectionModel(this.formaPagamentoRepository.findAll());
+        List<FormaPagamento> formaPagamentos = this.formaPagamentoRepository.findAll();
+
+        CollectionModel<FormaPagamentoModel> formaPagamentoModels = this.formaPagamentoModelAssembler
+                .toCollectionModel(formaPagamentos);
 
         return ResponseEntity.ok()
 //				.cacheControl(CacheControl.maxAge(10, TimeUnit.SECONDS))
@@ -67,6 +71,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                .body(formaPagamentoModels);
     }
 
+    @Override
     @GetMapping("/{id}")
     public ResponseEntity<FormaPagamentoModel> buscar(@PathVariable Long id, ServletWebRequest request) {
         ShallowEtagHeaderFilter.disableContentCaching(request.getRequest());
@@ -91,6 +96,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
                 .body(formaPagamentoModel);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public FormaPagamentoModel adicionar(@RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
@@ -98,6 +104,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return this.formaPagamentoModelAssembler.toModel(this.cadastroFormaPagamentoService.salvar(formaPagamento));
     }
 
+    @Override
     @PutMapping("/{id}")
     public FormaPagamentoModel atualizar(@PathVariable Long id, @RequestBody @Valid FormaPagamentoInput formaPagamentoInput) {
         FormaPagamento formaPagamento = this.cadastroFormaPagamentoService.buscarOuFalhar(id);
@@ -105,6 +112,7 @@ public class FormaPagamentoController implements FormaPagamentoControllerOpenApi
         return this.formaPagamentoModelAssembler.toModel(this.cadastroFormaPagamentoService.salvar(formaPagamento));
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

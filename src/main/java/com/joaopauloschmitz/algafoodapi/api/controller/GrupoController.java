@@ -2,13 +2,14 @@ package com.joaopauloschmitz.algafoodapi.api.controller;
 
 import com.joaopauloschmitz.algafoodapi.api.assembler.GrupoInputDiassembler;
 import com.joaopauloschmitz.algafoodapi.api.assembler.GrupoModelAssembler;
-import com.joaopauloschmitz.algafoodapi.api.openapi.controller.GrupoControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.api.model.GrupoModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.GrupoInput;
+import com.joaopauloschmitz.algafoodapi.api.openapi.controller.GrupoControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.domain.model.Grupo;
 import com.joaopauloschmitz.algafoodapi.domain.repository.GrupoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroGrupoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -33,16 +34,19 @@ public class GrupoController implements GrupoControllerOpenApi {
     private GrupoInputDiassembler grupoInputDiassembler;
 
     @GetMapping
-    public List<GrupoModel> listar() {
-        return this.grupoModelAssembler.toCollectionModel(this.grupoRepository.findAll());
+    public CollectionModel<GrupoModel> listar() {
+        List<Grupo> grupos = this.grupoRepository.findAll();
+        return this.grupoModelAssembler.toCollectionModel(grupos);
     }
 
+    @Override
     @GetMapping("/{id}")
     public GrupoModel buscar(@PathVariable Long id) {
         Grupo grupo = this.cadastroGrupoService.buscarOuFalhar(id);
         return this.grupoModelAssembler.toModel(grupo);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public GrupoModel adicionar(@RequestBody @Valid GrupoInput grupoInput) {
@@ -50,6 +54,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return this.grupoModelAssembler.toModel(this.cadastroGrupoService.salvar(grupo));
     }
 
+    @Override
     @PutMapping("/{id}")
     public GrupoModel atualizar(@PathVariable Long id,
                                        @RequestBody @Valid GrupoInput grupoInput) {
@@ -60,6 +65,7 @@ public class GrupoController implements GrupoControllerOpenApi {
         return this.grupoModelAssembler.toModel(this.cadastroGrupoService.salvar(grupo));
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

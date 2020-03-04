@@ -9,6 +9,7 @@ import com.joaopauloschmitz.algafoodapi.domain.model.Estado;
 import com.joaopauloschmitz.algafoodapi.domain.repository.EstadoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroEstadoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -32,17 +33,21 @@ public class EstadoController implements EstadoControllerOpenApi {
     @Autowired
     private EstadoInputDiassembler estadoInputDiassembler;
 
+    @Override
     @GetMapping
-    public List<EstadoModel> listar() {
-        return this.estadoModelAssembler.toCollectionModel(this.estadoRepository.findAll());
+    public CollectionModel<EstadoModel> listar() {
+        List<Estado> estados = this.estadoRepository.findAll();
+        return this.estadoModelAssembler.toCollectionModel(estados);
     }
 
+    @Override
     @GetMapping("/{id}")
     public EstadoModel buscar(@PathVariable Long id) {
         Estado estado = this.cadastroEstadoService.buscarOuFalhar(id);
         return this.estadoModelAssembler.toModel(estado);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
@@ -50,6 +55,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toModel(this.cadastroEstadoService.salvar(estado));
     }
 
+    @Override
     @PutMapping("/{id}")
     public EstadoModel atualizar(@PathVariable Long id,
                                             @RequestBody @Valid EstadoInput estadoInput) {
@@ -60,6 +66,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toModel(cadastroEstadoService.salvar(estadoAtual));
     }
 
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long id) {

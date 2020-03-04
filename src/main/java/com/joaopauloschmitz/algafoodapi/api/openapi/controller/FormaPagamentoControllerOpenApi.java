@@ -3,7 +3,9 @@ package com.joaopauloschmitz.algafoodapi.api.openapi.controller;
 import com.joaopauloschmitz.algafoodapi.api.exceptionhandler.Problem;
 import com.joaopauloschmitz.algafoodapi.api.model.FormaPagamentoModel;
 import com.joaopauloschmitz.algafoodapi.api.model.input.FormaPagamentoInput;
+import com.joaopauloschmitz.algafoodapi.api.openapi.model.FormasPagamentoModelOpenApi;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.ServletWebRequest;
 
@@ -12,8 +14,8 @@ import java.util.List;
 @Api(tags = "Formas de pagamento")
 public interface FormaPagamentoControllerOpenApi {
 
-    @ApiOperation("Lista as formas de pagamento")
-    public ResponseEntity<List<FormaPagamentoModel>> listar(ServletWebRequest request);
+    @ApiOperation(value = "Lista as formas de pagamento", response = FormasPagamentoModelOpenApi.class)
+    public ResponseEntity<CollectionModel<FormaPagamentoModel>> listar(ServletWebRequest request);
 
     @ApiOperation("Busca uma forma de pagamento por ID")
     @ApiResponses({

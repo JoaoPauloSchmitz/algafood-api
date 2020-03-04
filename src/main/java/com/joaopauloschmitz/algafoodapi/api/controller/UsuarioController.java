@@ -11,6 +11,7 @@ import com.joaopauloschmitz.algafoodapi.domain.model.Usuario;
 import com.joaopauloschmitz.algafoodapi.domain.repository.UsuarioRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,17 +35,21 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     @Autowired
     private UsuarioModelAssembler usuarioModelAssembler;
 
+    @Override
     @GetMapping
-    public List<UsuarioModel> listar() {
-        return this.usuarioModelAssembler.toCollectionModel(this.usuarioRepository.findAll());
+    public CollectionModel<UsuarioModel> listar() {
+        List<Usuario> usuarios = this.usuarioRepository.findAll();
+        return this.usuarioModelAssembler.toCollectionModel(usuarios);
     }
 
+    @Override
     @GetMapping("/{id}")
     public UsuarioModel buscar(@PathVariable Long id) {
         Usuario usuario = this.cadastroUsuarioService.buscarOuFalhar(id);
         return this.usuarioModelAssembler.toModel(usuario);
     }
 
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioModel adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
@@ -52,6 +57,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return this.usuarioModelAssembler.toModel(this.cadastroUsuarioService.salvar(usuario));
     }
 
+    @Override
     @PutMapping("/{id}")
     public UsuarioModel atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioInput usuarioInput) {
         Usuario usuario = this.cadastroUsuarioService.buscarOuFalhar(id);
@@ -59,6 +65,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return this.usuarioModelAssembler.toModel(this.cadastroUsuarioService.salvar(usuario));
     }
 
+    @Override
     @PutMapping("/{id}/senha")
     public void alterarSenha(@PathVariable Long id, @RequestBody @Valid SenhaInput senhaInput) {
         this.cadastroUsuarioService.alterarSenha(id, senhaInput.getSenhaAtual(), senhaInput.getNovaSenha());

@@ -8,6 +8,7 @@ import com.joaopauloschmitz.algafoodapi.domain.filter.PedidoFilter;
 import io.swagger.annotations.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
 
 @Api(tags = "Pedidos")
 public interface PedidoControllerOpenApi {
@@ -17,7 +18,7 @@ public interface PedidoControllerOpenApi {
                     name = "campos", paramType = "query", type = "string")
     })
     @ApiOperation("Pesquisa os pedidos")
-    public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable);
+    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro, Pageable pageable);
 
     @ApiOperation("Registra um pedido")
     @ApiResponses({

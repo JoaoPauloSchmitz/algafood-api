@@ -1,17 +1,17 @@
-package com.joaopauloschmitz.algafoodapi.api.openapi.model;
+package com.joaopauloschmitz.algafoodapi.api.model;
 
-import com.joaopauloschmitz.algafoodapi.api.model.CozinhaModel;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.math.BigDecimal;
 
-@ApiModel("RestauranteBasicoModel")
+@Relation(collectionRelation = "restaurantes")
 @Setter
 @Getter
-public class RestauranteBasicoModelOpenApi {
+public class RestauranteBasicoModel  extends RepresentationModel<RestauranteBasicoModel> {
 
     @ApiModelProperty(example = "1")
     private Long id;

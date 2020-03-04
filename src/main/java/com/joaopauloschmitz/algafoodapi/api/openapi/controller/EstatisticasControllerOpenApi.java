@@ -1,5 +1,6 @@
 package com.joaopauloschmitz.algafoodapi.api.openapi.controller;
 
+import com.joaopauloschmitz.algafoodapi.api.controller.EstatisticasController.EstatisticasModel;
 import com.joaopauloschmitz.algafoodapi.domain.filter.VendaDiariaFilter;
 import com.joaopauloschmitz.algafoodapi.domain.model.dto.VendaDiaria;
 import io.swagger.annotations.*;
@@ -9,6 +10,9 @@ import java.util.List;
 
 @Api(tags = "Estatísticas")
 public interface EstatisticasControllerOpenApi {
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasModel estatisticas();
 
     @ApiOperation("Consulta estatísticas de vendas diárias")
     @ApiImplicitParams({
