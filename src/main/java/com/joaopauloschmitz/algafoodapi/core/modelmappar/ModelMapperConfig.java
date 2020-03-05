@@ -1,7 +1,7 @@
 package com.joaopauloschmitz.algafoodapi.core.modelmappar;
 
-import com.joaopauloschmitz.algafoodapi.api.model.EnderecoModel;
-import com.joaopauloschmitz.algafoodapi.api.model.input.ItemPedidoInput;
+import com.joaopauloschmitz.algafoodapi.api.v1.model.EnderecoModel;
+import com.joaopauloschmitz.algafoodapi.api.v1.model.input.ItemPedidoInput;
 import com.joaopauloschmitz.algafoodapi.domain.model.Endereco;
 import com.joaopauloschmitz.algafoodapi.domain.model.ItemPedido;
 import org.modelmapper.ModelMapper;

@@ -2,13 +2,12 @@ package com.joaopauloschmitz.algafoodapi.core.springfox;
 
 import com.fasterxml.classmate.TypeResolver;
 import com.joaopauloschmitz.algafoodapi.api.exceptionhandler.Problem;
-import com.joaopauloschmitz.algafoodapi.api.model.*;
-import com.joaopauloschmitz.algafoodapi.api.openapi.model.*;
+import com.joaopauloschmitz.algafoodapi.api.v1.model.*;
+import com.joaopauloschmitz.algafoodapi.api.v1.openapi.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Links;
@@ -20,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.AlternateTypeRules;
@@ -50,8 +50,10 @@ public class SpringFoxConfig implements WebMvcConfigurer {
         var typeResolver = new TypeResolver();
 
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName("V1")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.joaopauloschmitz.algafoodapi.api"))
+                .paths(PathSelectors.ant("/v1/**"))
                 .build()
                 .useDefaultResponseMessages(false)
                 .globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
