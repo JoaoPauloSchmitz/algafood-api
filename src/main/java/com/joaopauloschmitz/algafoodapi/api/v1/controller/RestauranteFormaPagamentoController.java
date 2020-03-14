@@ -4,6 +4,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.assembler.FormaPagamentoModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.FormaPagamentoModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.RestauranteFormaPagamentoControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Restaurante;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<FormaPagamentoModel> listar(@PathVariable Long restauranteId) {
@@ -45,6 +47,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return formaPagamentoModels;
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @DeleteMapping("/{fomaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -53,6 +56,7 @@ public class RestauranteFormaPagamentoController implements RestauranteFormaPaga
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @PutMapping("/{fomaPagamentoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

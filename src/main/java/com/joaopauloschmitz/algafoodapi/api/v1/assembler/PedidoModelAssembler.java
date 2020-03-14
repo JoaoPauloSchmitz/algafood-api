@@ -3,6 +3,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.assembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.controller.PedidoController;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.PedidoModel;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Pedido;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public PedidoModelAssembler() {
         super(PedidoController.class, PedidoModel.class);
     }
@@ -29,37 +33,50 @@ public class PedidoModelAssembler extends RepresentationModelAssemblerSupport<Pe
 
         pedidoModel.add(this.algaLinks.linkToPedidos("pedidos"));
 
-        if (pedido.podeSerConfirmado()) {
-            pedidoModel.add(
-                    this.algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+        if (this.algaSecurity.podeGerenciarPedidos(pedido.getCodigo())) {
+
+            if (pedido.podeSerConfirmado()) {
+                pedidoModel.add(
+                        this.algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+            }
+
+            if (pedido.podeSerCancelado()) {
+                pedidoModel.add(
+                        this.algaLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+            }
+
+            if (pedido.podeSerEntregue()) {
+                pedidoModel.add(
+                        this.algaLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+            }
         }
 
-        if (pedido.podeSerCancelado()) {
-            pedidoModel.add(
-                    this.algaLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+        if (this.algaSecurity.podeConsultarRestaurantes()) {
+            pedidoModel.getRestaurante().add(
+                    this.algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
         }
 
-        if (pedido.podeSerEntregue()) {
-            pedidoModel.add(
-                    this.algaLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        if (this.algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            pedidoModel.getCliente().add(
+                    this.algaLinks.linkToUsuario(pedido.getCliente().getId()));
         }
 
-        pedidoModel.getRestaurante().add(
-                this.algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
+        if (this.algaSecurity.podeConsultarFormasPagamento()) {
+            pedidoModel.getFormaPagamento().add(
+                    this.algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
+        }
 
-        pedidoModel.getCliente().add(
-                this.algaLinks.linkToUsuario(pedido.getCliente().getId()));
+        if (this.algaSecurity.podeConsultarCidades()) {
+            pedidoModel.getEnderecoEntrega().getCidade().add(
+                    this.algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
+        }
 
-        pedidoModel.getFormaPagamento().add(
-                this.algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
-
-        pedidoModel.getEnderecoEntrega().getCidade().add(
-                this.algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
-
-        pedidoModel.getItens().forEach(item -> {
-            item.add(this.algaLinks.linkToProduto(
-                    pedidoModel.getRestaurante().getId(), item.getProdutoId(), "produto"));
-        });
+        if (this.algaSecurity.podeConsultarRestaurantes()) {
+            pedidoModel.getItens().forEach(item -> {
+                item.add(this.algaLinks.linkToProduto(
+                        pedidoModel.getRestaurante().getId(), item.getProdutoId(), "produto"));
+            });
+        }
 
         return pedidoModel;
     }

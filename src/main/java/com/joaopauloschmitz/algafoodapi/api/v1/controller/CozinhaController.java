@@ -5,6 +5,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.assembler.CozinhaModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.CozinhaModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.input.CozinhaInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.CozinhaControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Cozinha;
 import com.joaopauloschmitz.algafoodapi.domain.repository.CozinhaRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroCozinhaService;
@@ -39,6 +40,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Cozinha> cozinhaPagedResourcesAssembler;
 
+    @CheckSecurity.Cozinhas.PodeConsultar
     @Override
     @GetMapping
     public PagedModel<CozinhaModel> listar(@PageableDefault(size = 10) Pageable pageable) {
@@ -50,6 +52,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return cozinhaModels;
     }
 
+    @CheckSecurity.Cozinhas.PodeConsultar
     @Override
     @GetMapping("/{id}")
     public CozinhaModel buscar(@PathVariable Long id) {
@@ -57,6 +60,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return this.cozinhaModelAssembler.toModel(cozinha);
     }
 
+    @CheckSecurity.Cozinhas.PodeEditar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -65,6 +69,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
         return this.cozinhaModelAssembler.toModel(this.cadastroCozinhaService.salvar(cozinha));
     }
 
+    @CheckSecurity.Cozinhas.PodeEditar
     @Override
     @PutMapping("/{id}")
     public CozinhaModel atualizar(@PathVariable Long id, @RequestBody @Valid CozinhaInput cozinhaInput) {
@@ -76,6 +81,7 @@ public class CozinhaController implements CozinhaControllerOpenApi {
 
     }
 
+    @CheckSecurity.Cozinhas.PodeEditar
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

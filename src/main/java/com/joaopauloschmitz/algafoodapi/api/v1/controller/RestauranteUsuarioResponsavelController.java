@@ -4,6 +4,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.assembler.UsuarioModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.UsuarioModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Restaurante;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroRestauranteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Override
     @GetMapping
     public CollectionModel<UsuarioModel> listar(@PathVariable Long restauranteId) {
@@ -47,6 +49,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         return usuarioModels;
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Override
     @DeleteMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -55,6 +58,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarCadastro
     @Override
     @PutMapping("/{usuarioId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

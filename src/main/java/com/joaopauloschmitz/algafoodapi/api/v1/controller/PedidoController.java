@@ -9,6 +9,8 @@ import com.joaopauloschmitz.algafoodapi.api.v1.model.input.PedidoInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.PedidoControllerOpenApi;
 import com.joaopauloschmitz.algafoodapi.core.data.PageWrapper;
 import com.joaopauloschmitz.algafoodapi.core.data.PageableTranslator;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.exception.NegocioException;
 import com.joaopauloschmitz.algafoodapi.domain.filter.PedidoFilter;
@@ -52,6 +54,9 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PagedResourcesAssembler<Pedido> pedidoPagedResourcesAssembler;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
 //    @GetMapping
 //    public MappingJacksonValue listar(@RequestParam(required = false) String campos) {
 //        List<Pedido> pedidos = this.pedidoRepository.findAll();
@@ -71,6 +76,7 @@ public class PedidoController implements PedidoControllerOpenApi {
 //        return pedidosWrapper;
 //    }
 
+    @CheckSecurity.Pedidos.PodePesquisar
     @Override
     @GetMapping
     public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter pedidoFilter,
@@ -86,6 +92,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return this.pedidoPagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
 
+    @CheckSecurity.Pedidos.PodeBuscar
     @Override
     @GetMapping("/{codigoPedido}")
     public PedidoModel buscar(@PathVariable String codigoPedido) {
@@ -93,6 +100,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return this.pedidoModelAssembler.toModel(pedido);
     }
 
+    @CheckSecurity.Pedidos.PodeCriar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -100,9 +108,8 @@ public class PedidoController implements PedidoControllerOpenApi {
         try {
             Pedido pedido = this.pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-            // TODO pegar usuário autenticado
             pedido.setCliente(new Usuario());
-            pedido.getCliente().setId(1L);
+            pedido.getCliente().setId(this.algaSecurity.getUsuarioId());
 
             pedido = this.emissaoPedidoService.emitir(pedido);
 

@@ -3,6 +3,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.assembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.controller.UsuarioController;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.UsuarioModel;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Usuario;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public UsuarioModelAssembler() {
         super(UsuarioController.class, UsuarioModel.class);
     }
@@ -30,16 +34,23 @@ public class UsuarioModelAssembler extends RepresentationModelAssemblerSupport<U
         UsuarioModel usuarioModel = createModelWithId(usuario.getId(), usuario);
         this.modelMapper.map(usuario, usuarioModel);
 
-        usuarioModel.add(this.algaLinks.linkToUsuarios("usuarios"));
+        if (this.algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            usuarioModel.add(this.algaLinks.linkToUsuarios("usuarios"));
 
-        usuarioModel.add(this.algaLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+            usuarioModel.add(this.algaLinks.linkToGruposUsuario(usuario.getId(), "grupos-usuario"));
+        }
 
         return usuarioModel;
     }
 
     @Override
     public CollectionModel<UsuarioModel> toCollectionModel(Iterable<? extends Usuario> entities) {
-        return super.toCollectionModel(entities)
-                .add(linkTo(UsuarioController.class).withSelfRel());
+        CollectionModel<UsuarioModel> collectionModel = super.toCollectionModel(entities);
+
+        if (this.algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(this.algaLinks.linkToUsuarios());
+        }
+
+        return collectionModel;
     }
 }

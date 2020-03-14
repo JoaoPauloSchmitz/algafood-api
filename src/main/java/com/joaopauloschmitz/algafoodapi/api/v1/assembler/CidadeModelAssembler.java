@@ -3,6 +3,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.assembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.controller.CidadeController;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.CidadeModel;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,9 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public CidadeModelAssembler() {
         super(CidadeController.class, CidadeModel.class);
     }
@@ -31,16 +35,25 @@ public class CidadeModelAssembler extends RepresentationModelAssemblerSupport<Ci
         CidadeModel cidadeModel = createModelWithId(cidade.getId(), cidade);
         modelMapper.map(cidade, cidadeModel);
 
-        cidadeModel.add(this.algaLinks.linkToCidades("cidades"));
+        if (this.algaSecurity.podeConsultarCidades()) {
+            cidadeModel.add(this.algaLinks.linkToCidades("cidades"));
+        }
 
-        cidadeModel.getEstado().add(this.algaLinks.linkToEstado(cidadeModel.getEstado().getId()));
+        if (this.algaSecurity.podeConsultarEstados()) {
+            cidadeModel.getEstado().add(this.algaLinks.linkToEstado(cidadeModel.getEstado().getId()));
+        }
 
         return cidadeModel;
     }
 
     @Override
     public CollectionModel<CidadeModel> toCollectionModel(Iterable<? extends Cidade> entities) {
-        return super.toCollectionModel(entities)
-                .add(linkTo(CidadeController.class).withSelfRel());
+        CollectionModel<CidadeModel> collectionModel = super.toCollectionModel(entities);
+
+        if (this.algaSecurity.podeConsultarCidades()) {
+            collectionModel.add(this.algaLinks.linkToCidades());
+        }
+
+        return collectionModel;
     }
 }

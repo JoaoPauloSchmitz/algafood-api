@@ -2,6 +2,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.controller;
 
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.EstatisticasControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.filter.VendaDiariaFilter;
 import com.joaopauloschmitz.algafoodapi.domain.model.dto.VendaDiaria;
 import com.joaopauloschmitz.algafoodapi.domain.service.VendaQueryService;
@@ -31,6 +32,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
     @Autowired
     private AlgaLinks algaLinks;
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public EstatisticasModel estatisticas() {
@@ -41,6 +43,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
         return estatisticasModel;
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @Override
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<VendaDiaria> consultarVendasDiarias(VendaDiariaFilter vendaDiariaFilter,
@@ -48,6 +51,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
         return this.vendaQueryService.consultarVendasDiarias(vendaDiariaFilter, timeOffset);
     }
 
+    @CheckSecurity.Estatisticas.PodeConsultar
     @Override
     @GetMapping(value = "/vendas-diarias", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> consultarVendasDiariasPdf(VendaDiariaFilter vendaDiariaFilter,

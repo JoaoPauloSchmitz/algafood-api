@@ -18,11 +18,17 @@ public interface RestauranteRepository extends CustomJpaRepository<Restaurante, 
     List<Restaurante> findAll();
 
     List<Restaurante> findByTaxaFreteBetween(BigDecimal taxaInicial, BigDecimal taxaFinal);
+
     List<Restaurante> findPorNomeCozinhaId(String nome, Long id);
 
-    List<Restaurante> findByNomeContainingAndCozinhaId(String nome, Long id);
+//    List<Restaurante> findByNomeContainingAndCozinhaId(String nome, Long id);
+
     Optional<Restaurante> findFirstByNomeContaining(String nome);
+
     List<Restaurante> findTop2ByNomeContaining(String nome);
+
     int countByCozinhaId(Long id);
+
+    boolean existsResponsavel(Long restauranteId, Long usuarioId);
 
 }

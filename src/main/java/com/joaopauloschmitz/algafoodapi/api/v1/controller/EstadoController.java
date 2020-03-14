@@ -5,6 +5,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.assembler.EstadoModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.EstadoModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.input.EstadoInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.EstadoControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Estado;
 import com.joaopauloschmitz.algafoodapi.domain.repository.EstadoRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroEstadoService;
@@ -33,6 +34,7 @@ public class EstadoController implements EstadoControllerOpenApi {
     @Autowired
     private EstadoInputDiassembler estadoInputDiassembler;
 
+    @CheckSecurity.Estados.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<EstadoModel> listar() {
@@ -40,6 +42,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toCollectionModel(estados);
     }
 
+    @CheckSecurity.Estados.PodeConsultar
     @Override
     @GetMapping("/{id}")
     public EstadoModel buscar(@PathVariable Long id) {
@@ -47,6 +50,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toModel(estado);
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -55,6 +59,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toModel(this.cadastroEstadoService.salvar(estado));
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @Override
     @PutMapping("/{id}")
     public EstadoModel atualizar(@PathVariable Long id,
@@ -66,6 +71,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return this.estadoModelAssembler.toModel(cadastroEstadoService.salvar(estadoAtual));
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

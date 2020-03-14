@@ -3,6 +3,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.controller;
 import com.joaopauloschmitz.algafoodapi.api.v1.assembler.PermissaoModelAssembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.PermissaoModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.PermissaoControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Permissao;
 import com.joaopauloschmitz.algafoodapi.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class PermissaoController implements PermissaoControllerOpenApi {
     @Autowired
     private PermissaoModelAssembler permissaoModelAssembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<PermissaoModel> listar() {

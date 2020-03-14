@@ -3,6 +3,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.assembler;
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.controller.RestauranteController;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.RestauranteBasicoModel;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Restaurante;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class RestauranteBasicoModelAssembler
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     public RestauranteBasicoModelAssembler() {
         super(RestauranteController.class, RestauranteBasicoModel.class);
     }
@@ -31,17 +35,26 @@ public class RestauranteBasicoModelAssembler
 
         this.modelMapper.map(restaurante, restauranteModel);
 
-        restauranteModel.add(this.algaLinks.linkToRestaurantes("restaurantes"));
+        if (this.algaSecurity.podeConsultarRestaurantes()) {
+            restauranteModel.add(this.algaLinks.linkToRestaurantes("restaurantes"));
+        }
 
-        restauranteModel.getCozinha().add(
-                this.algaLinks.linkToCozinha(restaurante.getCozinha().getId()));
+        if (this.algaSecurity.podeConsultarCozinhas()) {
+            restauranteModel.getCozinha().add(
+                    this.algaLinks.linkToCozinha(restaurante.getCozinha().getId()));
+        }
 
         return restauranteModel;
     }
 
     @Override
     public CollectionModel<RestauranteBasicoModel> toCollectionModel(Iterable<? extends Restaurante> entities) {
-        return super.toCollectionModel(entities)
-                .add(this.algaLinks.linkToRestaurantes());
+        CollectionModel<RestauranteBasicoModel> collectionModel = super.toCollectionModel(entities);
+
+        if (this.algaSecurity.podeConsultarRestaurantes()) {
+            collectionModel.add(this.algaLinks.linkToRestaurantes());
+        }
+
+        return collectionModel;
     }
 }

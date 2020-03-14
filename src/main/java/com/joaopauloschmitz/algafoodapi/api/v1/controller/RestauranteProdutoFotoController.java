@@ -4,6 +4,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.assembler.FotoProdutoModelAssembl
 import com.joaopauloschmitz.algafoodapi.api.v1.model.FotoProdutoModel;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.input.FotoProdutoInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.exception.EntidadeNaoEncontradaException;
 import com.joaopauloschmitz.algafoodapi.domain.model.FotoProduto;
 import com.joaopauloschmitz.algafoodapi.domain.model.Produto;
@@ -42,6 +43,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
     @Autowired
     private FotoProdutoModelAssembler fotoProdutoModelAssembler;
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FotoProdutoModel atualizarFoto(@PathVariable Long restauranteId,
@@ -64,6 +66,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
         return this.fotoProdutoModelAssembler.toModel(fotoSalva);
     }
 
+    @CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
     @Override
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -71,6 +74,7 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
         this.catalogoFotoProdutoService.excluir(restauranteId, produtoId);
     }
 
+    @CheckSecurity.Restaurantes.PodeConsultar
     @Override
     @GetMapping
     public FotoProdutoModel buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {

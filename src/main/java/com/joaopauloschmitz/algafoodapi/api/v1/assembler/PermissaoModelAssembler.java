@@ -2,6 +2,7 @@ package com.joaopauloschmitz.algafoodapi.api.v1.assembler;
 
 import com.joaopauloschmitz.algafoodapi.api.v1.AlgaLinks;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.PermissaoModel;
+import com.joaopauloschmitz.algafoodapi.core.security.AlgaSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Permissao;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class PermissaoModelAssembler implements RepresentationModelAssembler<Per
     @Autowired
     private AlgaLinks algaLinks;
 
+    @Autowired
+    private AlgaSecurity algaSecurity;
+
     @Override
     public PermissaoModel toModel(Permissao permissao) {
         PermissaoModel permissaoModel = this.modelMapper.map(permissao, PermissaoModel.class);
@@ -26,7 +30,13 @@ public class PermissaoModelAssembler implements RepresentationModelAssembler<Per
 
     @Override
     public CollectionModel<PermissaoModel> toCollectionModel(Iterable<? extends Permissao> entities) {
-        return RepresentationModelAssembler.super.toCollectionModel(entities)
-                .add(this.algaLinks.linkToPermissoes());
+        CollectionModel<PermissaoModel> collectionModel
+                = RepresentationModelAssembler.super.toCollectionModel(entities);
+
+        if (this.algaSecurity.podeConsultarUsuariosGruposPermissoes()) {
+            collectionModel.add(this.algaLinks.linkToPermissoes());
+        }
+
+        return collectionModel;
     }
 }

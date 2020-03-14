@@ -7,6 +7,7 @@ import com.joaopauloschmitz.algafoodapi.api.v1.model.input.SenhaInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.input.UsuarioComSenhaInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.model.input.UsuarioInput;
 import com.joaopauloschmitz.algafoodapi.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.joaopauloschmitz.algafoodapi.core.security.CheckSecurity;
 import com.joaopauloschmitz.algafoodapi.domain.model.Usuario;
 import com.joaopauloschmitz.algafoodapi.domain.repository.UsuarioRepository;
 import com.joaopauloschmitz.algafoodapi.domain.service.CadastroUsuarioService;
@@ -35,6 +36,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
     @Autowired
     private UsuarioModelAssembler usuarioModelAssembler;
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<UsuarioModel> listar() {
@@ -42,6 +44,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return this.usuarioModelAssembler.toCollectionModel(usuarios);
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
     @Override
     @GetMapping("/{id}")
     public UsuarioModel buscar(@PathVariable Long id) {
@@ -57,6 +60,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return this.usuarioModelAssembler.toModel(this.cadastroUsuarioService.salvar(usuario));
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
     @Override
     @PutMapping("/{id}")
     public UsuarioModel atualizar(@PathVariable Long id, @RequestBody @Valid UsuarioInput usuarioInput) {
@@ -65,6 +69,7 @@ public class UsuarioController implements UsuarioControllerOpenApi {
         return this.usuarioModelAssembler.toModel(this.cadastroUsuarioService.salvar(usuario));
     }
 
+    @CheckSecurity.UsuariosGruposPermissoes.PodeAlterarPropriaSenha
     @Override
     @PutMapping("/{id}/senha")
     public void alterarSenha(@PathVariable Long id, @RequestBody @Valid SenhaInput senhaInput) {
